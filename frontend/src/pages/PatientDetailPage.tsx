@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'reactPattern' from 'lucide-react';
-import { useParams as useReactParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PatientService, VitalsService, getSocket } from '../services/api';
 import { Patient, VitalRecord, DiagnosticReport } from '../types';
 import { VitalsStreamChart } from '../components/dashboard/VitalsStreamChart';
@@ -24,7 +23,7 @@ import {
 } from 'lucide-react';
 
 export const PatientDetailPage: React.FC = () => {
-  const { id } = useReactParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [patient, setPatient] = useState<Patient | null>(null);
