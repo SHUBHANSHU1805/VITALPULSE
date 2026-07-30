@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("DOCTOR") // DOCTOR, ADMIN, PATIENT
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  patient        Patient?       @relation("UserPatient")
+  doctorPatients Patient[]      @relation("AssignedDoctor")
+  consultations  Consultation[] @relation("DoctorConsultations")
+}
+
+model Patient {
+  id               String   @id @default(uuid())
+  userId           String?  @unique
+  user             User?    @relation("UserPatient", fields: [userId], references: [id])
+  name             String
+  age              Int
+  gender           String
+  assignedDoctorId String?
+  assignedDoctor   User?    @relation("AssignedDoctor", fields: [assignedDoctorId], references: [id])
+  phone            String?
+  bloodType        String?
+  roomNumber       String?
+  ward             String?  @default("ICU")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vitals           VitalRecord[]
+  medicalHistories MedicalHistory[]
+  reports          DiagnosticReport[]
+  alerts           Alert[]
+  riskScores       RiskScore[]
+  consultations    Consultation[]
+}
+
+model VitalRecord {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  heartRate   Float
+  bpSystolic  Float
+  bpDiastolic Float
+  spo2        Float
+  temperature Float
+  glucose     Float?
+  recordedAt  DateTime @default(now())
+  source      String   @default("SIMULATED") // MANUAL, SIMULATED
+}
+
+model MedicalHistory {
+  id            String   @id @default(uuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  condition     String
+  diagnosedDate DateTime
+  notes         String?
+  medications   String   // JSON string of medication array
+  createdAt     DateTime @default(now())
+}
+
+model DiagnosticReport {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title       String
+  fileUrl     String
+  fileType    String
+  summary     String?
+  rawContent  String?
+  uploadedAt  DateTime @default(now())
+}
+
+model Alert {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type        String   // THRESHOLD, ANOMALY
+  severity    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  message     String
+  triggeredAt DateTime @default(now())
+  resolved    Boolean  @default(false)
+}
+
+model RiskScore {
+  id         String   @id @default(uuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  score      Float    // 0 to 100
+  level      String   @default("LOW") // LOW, MODERATE, HIGH, CRITICAL
+  topFactors String   // JSON array of { feature: string, contribution: number }
+  computedAt DateTime @default(now())
+}
+
+model Consultation {
+  id           String   @id @default(uuid())
+  patientId    String
+  patient      Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId     String
+  doctor       User     @relation("DoctorConsultations", fields: [doctorId], references: [id])
+  scheduledAt  DateTime
+  status       String   @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  notes        String?
+  prescription String?  // JSON string or structured text
+  createdAt    DateTime @default(now())
+}
