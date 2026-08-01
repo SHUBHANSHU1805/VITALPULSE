@@ -1,4 +1,4 @@
-# Project Nightingale - Medical Disclaimer & System Limitations
+# Project VitalPulse - Medical Disclaimer & System Limitations
 
 > [!WARNING]
 > **DISCLAIMER**: This project is built solely as a portfolio/hackathon demonstration MVP for clinical workflow modeling, telemetry visualization, and machine learning risk scoring. It is **NOT** a certified medical device and must **NOT** be used for clinical diagnosis, treatment decisions, or active emergency patient care.

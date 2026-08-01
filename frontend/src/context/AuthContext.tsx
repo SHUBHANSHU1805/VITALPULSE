@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('nightingale_token'));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('vitalpulse_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(res.data);
       } catch (err) {
         console.error('Failed to restore session:', err);
-        localStorage.removeItem('nightingale_token');
+        localStorage.removeItem('vitalpulse_token');
         setToken(null);
         setUser(null);
       } finally {
@@ -43,13 +43,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     const res = await api.post<{ token: string; user: User }>('/auth/login', { email, password });
     const { token: newToken, user: newUser } = res.data;
-    localStorage.setItem('nightingale_token', newToken);
+    localStorage.setItem('vitalpulse_token', newToken);
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = () => {
-    localStorage.removeItem('nightingale_token');
+    localStorage.removeItem('vitalpulse_token');
     setToken(null);
     setUser(null);
   };

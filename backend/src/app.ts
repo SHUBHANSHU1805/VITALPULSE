@@ -22,7 +22,7 @@ app.use('/api/consultations', consultationRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'HEALTHY',
-    service: 'Nightingale Backend API',
+    service: 'VitalPulse Backend API',
     timestamp: new Date().toISOString(),
   });
 });

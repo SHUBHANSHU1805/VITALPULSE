@@ -63,7 +63,7 @@ export const DiagnosticViewerModal: React.FC<DiagnosticViewerModalProps> = ({ re
 
         {/* Footer */}
         <div className="px-6 py-4 bg-slate-900 border-t border-slate-800 flex items-center justify-between">
-          <span className="text-xs text-slate-500">Verified by Nightingale Clinical AI Engine</span>
+          <span className="text-xs text-slate-500">Verified by VitalPulse Clinical AI Engine</span>
           <div className="flex items-center space-x-2">
             <button
               onClick={() => alert(`Downloading diagnostic file artifact ${report.title}...`)}

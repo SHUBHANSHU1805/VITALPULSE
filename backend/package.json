@@ -1,7 +1,7 @@
 {
-  "name": "nightingale-backend",
+  "name": "vitalpulse-backend",
   "version": "1.0.0",
-  "description": "Express REST & Socket API backend for Nightingale Remote Health Dashboard",
+  "description": "Express REST & Socket API backend for VitalPulse Remote Health Dashboard",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

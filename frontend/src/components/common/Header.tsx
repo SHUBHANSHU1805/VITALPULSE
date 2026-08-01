@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
             <HeartPulse className="w-5 h-5 animate-pulse" />
           </div>
           <span className="text-lg font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-teal-100 to-clinical-teal">
-            NIGHTINGALE
+            VITALPULSE
           </span>
           <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-clinical-teal/10 border border-clinical-teal/30 text-clinical-teal">
             CLINICAL MVP

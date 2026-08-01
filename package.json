@@ -1,8 +1,8 @@
 {
-  "name": "nightingale-monorepo",
+  "name": "vitalpulse-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "Nightingale Remote Health Dashboard for Doctors",
+  "description": "VitalPulse Remote Health Dashboard for Doctors",
   "scripts": {
     "dev:backend": "npm run dev --prefix backend",
     "dev:frontend": "npm run dev --prefix frontend",

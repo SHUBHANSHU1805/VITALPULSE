@@ -13,7 +13,7 @@ export const api = axios.create({
 
 // Attach JWT Bearer token to all requests automatically
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('nightingale_token');
+  const token = localStorage.getItem('vitalpulse_token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }

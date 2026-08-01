@@ -12,7 +12,7 @@ const PORT = env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`====================================================`);
-  console.log(`🚀 Nightingale Backend API Server listening on port ${PORT}`);
+  console.log(`🚀 VitalPulse Backend API Server listening on port ${PORT}`);
   console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
   console.log(`====================================================`);
 });

@@ -1,8 +1,8 @@
-# Project Nightingale - Remote Health Dashboard for Doctors
+# Project VitalPulse - Remote Health Dashboard for Doctors
 
-**Nightingale** is a high-performance, clinician-facing remote health dashboard that aggregates live patient vitals, medical histories, diagnostic reports, and AI-driven risk analytics into a single dashboard interface.
+**VitalPulse** is a high-performance, clinician-facing remote health dashboard that aggregates live patient vitals, medical histories, diagnostic reports, and AI-driven risk analytics into a single dashboard interface.
 
-![Nightingale System Architecture](https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20FastAPI%20%7C%20Prisma-14B8A6)
+![VitalPulse System Architecture](https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20FastAPI%20%7C%20Prisma-14B8A6)
 
 ---
 
@@ -20,7 +20,7 @@
 ## 🛠️ Architecture Overview
 
 ```text
-Nightingale/
+VitalPulse/
 ├── backend/          # Node.js, Express, TypeScript, Prisma ORM, Socket.io (Port 5000)
 ├── frontend/         # React, Vite, TypeScript, Tailwind CSS v3, Recharts (Port 3000)
 └── ml-service/       # Python, FastAPI, XGBoost/Scikit-Learn, SHAP, Pandas (Port 8000)
@@ -67,5 +67,5 @@ python -m app.main
 
 ## 🧪 Demo Credentials
 
-- **Doctor Login**: `doctor@nightingale.med` / `Doctor123!`
-- **Admin Login**: `admin@nightingale.med` / `Admin123!`
+- **Doctor Login**: `doctor@vitalpulse.med` / `Doctor123!`
+- **Admin Login**: `admin@vitalpulse.med` / `Admin123!`

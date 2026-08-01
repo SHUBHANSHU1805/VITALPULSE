@@ -7,7 +7,7 @@ from app.services.nlp_service import summarize_clinical_report
 from app.utils.data_generator import generate_synthetic_clinical_dataset
 
 app = FastAPI(
-    title="Nightingale AI Risk & Diagnostics Microservice",
+    title="VitalPulse AI Risk & Diagnostics Microservice",
     version="1.0.0",
     description="Predictive risk scoring, SHAP explainability, and clinical report NLP processing"
 )
@@ -37,7 +37,7 @@ class ReportSummaryRequest(BaseModel):
 def health_check():
     return {
         "status": "HEALTHY",
-        "service": "Nightingale ML Risk API",
+        "service": "VitalPulse ML Risk API",
         "model_trained": risk_predictor.is_trained
     }
 

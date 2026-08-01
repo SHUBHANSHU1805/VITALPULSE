@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting Nightingale Database Seeding...');
+  console.log('🌱 Starting VitalPulse Database Seeding...');
 
   // Clean existing tables
   await prisma.consultation.deleteMany();
@@ -23,7 +23,7 @@ async function main() {
   const doctor = await prisma.user.create({
     data: {
       name: 'Dr. Sarah Jenkins, MD',
-      email: 'doctor@nightingale.med',
+      email: 'doctor@vitalpulse.med',
       passwordHash: doctorPassword,
       role: 'DOCTOR',
     },
@@ -32,7 +32,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: 'Chief Admin Marcus Vance',
-      email: 'admin@nightingale.med',
+      email: 'admin@vitalpulse.med',
       passwordHash: adminPassword,
       role: 'ADMIN',
     },
@@ -237,7 +237,7 @@ async function main() {
     }
   }
 
-  console.log('✅ Successfully seeded Nightingale database with 5 clinical patient records');
+  console.log('✅ Successfully seeded VitalPulse database with 5 clinical patient records');
 }
 
 main()

@@ -7,7 +7,7 @@ export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('doctor@nightingale.med');
+  const [email, setEmail] = useState('doctor@vitalpulse.med');
   const [password, setPassword] = useState('Doctor123!');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +39,7 @@ export const LoginPage: React.FC = () => {
           <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-clinical-teal/20 to-clinical-cyan/20 border border-clinical-teal/40 text-clinical-teal shadow-glow-teal mb-2">
             <HeartPulse className="w-8 h-8 animate-pulse" />
           </div>
-          <h1 className="text-2xl font-black tracking-wider text-white">NIGHTINGALE</h1>
+          <h1 className="text-2xl font-black tracking-wider text-white">VITALPULSE</h1>
           <p className="text-xs text-slate-400">Clinician Remote Health & Predictive Analytics Dashboard</p>
         </div>
 
@@ -61,7 +61,7 @@ export const LoginPage: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-clinical-teal transition-colors"
-                placeholder="doctor@nightingale.med"
+                placeholder="doctor@vitalpulse.med"
               />
             </div>
           </div>
@@ -95,11 +95,11 @@ export const LoginPage: React.FC = () => {
         <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
           <p className="font-bold text-slate-300 uppercase tracking-wider">Demo Access Credentials:</p>
           <div className="flex justify-between font-mono">
-            <span>Doctor: doctor@nightingale.med</span>
+            <span>Doctor: doctor@vitalpulse.med</span>
             <span className="text-clinical-teal">Doctor123!</span>
           </div>
           <div className="flex justify-between font-mono">
-            <span>Admin: admin@nightingale.med</span>
+            <span>Admin: admin@vitalpulse.med</span>
             <span className="text-clinical-teal">Admin123!</span>
           </div>
         </div>
