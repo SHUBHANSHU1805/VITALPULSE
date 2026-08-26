@@ -1,97 +1,83 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Bell, ShieldAlert, LogOut, HeartPulse } from 'lucide-react';
+import { Bell, Search, ChevronDown, AlertTriangle } from 'lucide-react';
 import { getSocket } from '../../services/api';
 import { Alert } from '../../types';
 
+const NAV = [
+  { label: 'Overview',  path: '/dashboard' },
+  { label: 'Patients',  path: '/patients' },
+  { label: 'Telehealth',path: '/consultations' },
+  { label: 'Analytics', path: '/dashboard' },
+];
+
 export const Header: React.FC = () => {
   const { user, logout } = useAuth();
-  const [livePings, setLivePings] = useState<number>(0);
-  const [recentAlert, setRecentAlert] = useState<Alert | null>(null);
-  const [showAlertToast, setShowAlertToast] = useState(false);
+  const navigate = useNavigate();
+  const [alerts, setAlerts] = useState<Alert[]>([]);
 
   useEffect(() => {
     const socket = getSocket();
-
-    socket.on('patient_telemetry_ping', () => {
-      setLivePings((prev) => prev + 1);
-    });
-
-    socket.on('new_alert', (newAlert: Alert) => {
-      setRecentAlert(newAlert);
-      setShowAlertToast(true);
-      setTimeout(() => setShowAlertToast(false), 7000);
-    });
-
-    return () => {
-      socket.off('patient_telemetry_ping');
-      socket.off('new_alert');
-    };
+    socket.on('new_alert', (a: Alert) => setAlerts(p => [a, ...p].slice(0, 5)));
+    return () => { socket.off('new_alert'); };
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#0B1120]/85 backdrop-blur-xl border-b border-[rgba(59,130,246,0.12)] px-6 flex items-center justify-between shadow-lg">
-      {/* Left: Brand + live status */}
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2.5">
-          {/* Logo icon — blue gradient square */}
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600/25 to-indigo-500/20 border border-blue-500/30 text-blue-400 shadow-glow-blue">
-            <HeartPulse className="w-5 h-5" />
-          </div>
-          <span className="text-lg font-extrabold tracking-wider text-gradient-blue">
-            VITALPULSE
-          </span>
-          <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/25 text-blue-400">
-            CLINICAL
-          </span>
+    <header className="h-14 flex items-center px-5 gap-6 border-b border-[#1A2744] bg-[#070D1B]/90 backdrop-blur-xl sticky top-0 z-40">
+      {/* Logo */}
+      <div className="flex items-center gap-2.5 min-w-[140px] cursor-pointer" onClick={() => navigate('/dashboard')}>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00D4FF] to-[#8B5CF6] flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
+            <path d="M10 2L12 8H18L13 12L15 18L10 14L5 18L7 12L2 8H8L10 2Z" fill="white"/>
+          </svg>
         </div>
-
-        {/* Live telemetry indicator */}
-        <div className="hidden md:flex items-center space-x-2 pl-4 border-l border-[rgba(59,130,246,0.15)] text-xs text-slate-400">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-60"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
-          </span>
-          <span>Live Telemetry ({livePings} events)</span>
-        </div>
+        <span className="text-base font-bold text-gradient-brand tracking-wide">VitalPulse</span>
       </div>
 
-      {/* Center: Critical alert toast */}
-      {showAlertToast && recentAlert && (
-        <div className="hidden lg:flex items-center space-x-3 px-4 py-1.5 rounded-xl bg-rose-950/90 border border-rose-500/50 text-rose-200 text-xs shadow-glow-rose">
-          <ShieldAlert className="w-4 h-4 text-rose-400 animate-spin" />
-          <span className="font-semibold">{recentAlert.message}</span>
-        </div>
-      )}
+      {/* Nav links */}
+      <nav className="flex items-center gap-1 flex-1 justify-center">
+        {NAV.map(n => (
+          <NavLink key={n.label} to={n.path}
+            className={({ isActive }) =>
+              `relative px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                isActive ? 'nav-active text-vs-cyan' : 'text-vs-dim hover:text-vs-text'
+              }`
+            }
+          >
+            {n.label}
+          </NavLink>
+        ))}
+      </nav>
 
-      {/* Right: Bell + user */}
-      <div className="flex items-center space-x-3">
-        <div className="relative">
-          <button className="p-2 rounded-lg bg-[#0F172A] hover:bg-[#1E293B] text-slate-300 transition-colors border border-[rgba(59,130,246,0.12)] relative">
-            <Bell className="w-4 h-4 text-slate-400" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-[#0B1120]"></span>
-          </button>
+      {/* Right controls */}
+      <div className="flex items-center gap-3 min-w-[240px] justify-end">
+        {/* Search */}
+        <div className="hidden lg:flex items-center gap-2 bg-[#0B1329] border border-[#1A2744] rounded-lg px-3 py-1.5 w-44">
+          <Search className="w-3.5 h-3.5 text-vs-dim" />
+          <input placeholder="Search patients..." className="bg-transparent text-xs text-vs-text placeholder-vs-dim outline-none w-full" />
         </div>
 
-        <div className="flex items-center space-x-3 pl-3 border-l border-[rgba(59,130,246,0.12)]">
-          {/* Avatar: circular with blue gradient ring (reference style) */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-[2px] shadow-glow-blue">
-            <div className="w-full h-full bg-[#0F172A] rounded-full flex items-center justify-center text-blue-400 font-bold text-xs">
-              {user?.name ? user.name.slice(0, 2).toUpperCase() : 'DR'}
-            </div>
+        {/* Bell */}
+        <button className="relative p-2 rounded-lg bg-[#0B1329] border border-[#1A2744] hover:border-vs-cyan/30 transition-colors">
+          <Bell className="w-4 h-4 text-vs-dim" />
+          {alerts.length > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-vs-rose rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+              {alerts.length}
+            </span>
+          )}
+        </button>
+
+        {/* User */}
+        <div className="flex items-center gap-2 cursor-pointer" onClick={logout}>
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-vs-cyan to-vs-purple flex items-center justify-center text-[11px] font-bold text-white">
+            {user?.name?.slice(0,2).toUpperCase() ?? 'DR'}
           </div>
           <div className="hidden sm:block text-left">
-            <p className="text-xs font-semibold text-slate-200">{user?.name || 'Dr. Sarah Jenkins'}</p>
-            <p className="text-[10px] text-blue-400 uppercase tracking-wider font-semibold">{user?.role || 'DOCTOR'}</p>
+            <p className="text-xs font-semibold text-vs-text leading-none">{user?.name ?? 'Dr. Alex Morgan'}</p>
+            <p className="text-[10px] text-vs-dim mt-0.5">{user?.role ?? 'Chief Medical Officer'}</p>
           </div>
-
-          <button
-            onClick={logout}
-            title="Sign Out"
-            className="p-2 rounded-lg bg-[#0F172A]/60 hover:bg-rose-950/50 hover:text-rose-400 text-slate-400 transition-colors border border-transparent hover:border-rose-500/30"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+          <ChevronDown className="w-3 h-3 text-vs-dim" />
         </div>
       </div>
     </header>

@@ -8,35 +8,30 @@ import { DoctorDashboard } from './pages/DoctorDashboard';
 import { PatientRosterPage } from './pages/PatientRosterPage';
 import { PatientDetailPage } from './pages/PatientDetailPage';
 import { ConsultationsPage } from './pages/ConsultationsPage';
-import { Activity } from 'lucide-react';
 
 const ProtectedLayout: React.FC = () => {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0B1120] flex items-center justify-center text-slate-400">
-        <Activity className="w-8 h-8 animate-spin text-blue-400 mb-2" />
-      </div>
-    );
-  }
+  if (isLoading) return (
+    <div className="min-h-screen bg-vs-bg flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-vs-cyan border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="min-h-screen bg-[#0B1120] flex flex-col">
+    <div className="min-h-screen bg-[#070D1B] flex flex-col">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto p-5">
           <Routes>
-            <Route path="/dashboard" element={<DoctorDashboard />} />
-            <Route path="/patients" element={<PatientRosterPage />} />
-            <Route path="/patients/:id" element={<PatientDetailPage />} />
-            <Route path="/consultations" element={<ConsultationsPage />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard"       element={<DoctorDashboard />} />
+            <Route path="/patients"        element={<PatientRosterPage />} />
+            <Route path="/patients/:id"    element={<PatientDetailPage />} />
+            <Route path="/consultations"   element={<ConsultationsPage />} />
+            <Route path="*"               element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
       </div>
@@ -44,17 +39,15 @@ const ProtectedLayout: React.FC = () => {
   );
 };
 
-export const App: React.FC = () => {
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/*" element={<ProtectedLayout />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
-  );
-};
+export const App: React.FC = () => (
+  <AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/*"    element={<ProtectedLayout />} />
+      </Routes>
+    </Router>
+  </AuthProvider>
+);
 
 export default App;
