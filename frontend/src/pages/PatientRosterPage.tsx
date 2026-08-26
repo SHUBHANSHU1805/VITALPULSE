@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PatientService } from '../services/api';
 import { Patient } from '../types';
 import { PatientListTable } from '../components/dashboard/PatientListTable';
-import { Search, Filter, Plus, UserPlus, SlidersHorizontal } from 'lucide-react';
+import { Search, UserPlus, SlidersHorizontal } from 'lucide-react';
 
 export const PatientRosterPage: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -12,15 +12,8 @@ export const PatientRosterPage: React.FC = () => {
   const [minRisk, setMinRisk] = useState<number>(0);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
-  // Form State for Adding Patient
   const [newPatient, setNewPatient] = useState({
-    name: '',
-    age: '',
-    gender: 'Female',
-    bloodType: 'O+',
-    roomNumber: 'ICU-105',
-    ward: 'ICU',
-    phone: '',
+    name: '', age: '', gender: 'Female', bloodType: 'O+', roomNumber: 'ICU-105', ward: 'ICU', phone: '',
   });
 
   const fetchPatients = async () => {
@@ -38,17 +31,12 @@ export const PatientRosterPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPatients();
-  }, [searchQuery, selectedWard, minRisk]);
+  useEffect(() => { fetchPatients(); }, [searchQuery, selectedWard, minRisk]);
 
   const handleCreatePatient = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await PatientService.createPatient({
-        ...newPatient,
-        age: Number(newPatient.age),
-      });
+      await PatientService.createPatient({ ...newPatient, age: Number(newPatient.age) });
       setShowAddModal(false);
       setNewPatient({ name: '', age: '', gender: 'Female', bloodType: 'O+', roomNumber: 'ICU-105', ward: 'ICU', phone: '' });
       fetchPatients();
@@ -57,32 +45,28 @@ export const PatientRosterPage: React.FC = () => {
     }
   };
 
+  const inputCls = "w-full p-2.5 rounded-xl bg-[rgba(15,23,42,0.80)] border border-[rgba(59,130,246,0.15)] text-xs text-slate-100 focus:outline-none focus:border-blue-500/50 transition-all";
+
   return (
     <div className="space-y-6">
-      {/* Header & Actions */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-100 tracking-wide">
-            Patient Directory & Triage Roster
-          </h1>
-          <p className="text-xs text-slate-400">
-            Search, filter, and review active hospital patient telemetry records
-          </p>
+          <h1 className="text-2xl font-black text-slate-100 tracking-wide">Patient Directory & Triage Roster</h1>
+          <p className="text-xs text-slate-400">Search, filter, and review active hospital patient telemetry records</p>
         </div>
-
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-clinical-teal to-clinical-cyan text-slate-950 font-extrabold text-xs flex items-center space-x-2 shadow-glow-teal hover:opacity-90 transition-all self-start sm:self-auto"
+          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs flex items-center space-x-2 shadow-glow-blue hover:from-blue-500 hover:to-indigo-500 transition-all self-start sm:self-auto"
         >
           <UserPlus className="w-4 h-4" />
           <span>Register New Patient</span>
         </button>
       </div>
 
-      {/* Advanced Filter Toolbar */}
-      <div className="p-4 rounded-2xl glass-panel border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      {/* Filter toolbar */}
+      <div className="p-4 rounded-2xl glass-panel border border-[rgba(59,130,246,0.12)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          {/* Search Box */}
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
@@ -90,15 +74,14 @@ export const PatientRosterPage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by patient name, room..."
-              className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-clinical-teal"
+              className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-[rgba(15,23,42,0.80)] border border-[rgba(59,130,246,0.15)] text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all"
             />
           </div>
 
-          {/* Ward Filter */}
           <select
             value={selectedWard}
             onChange={(e) => setSelectedWard(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-clinical-teal font-semibold"
+            className="px-3 py-2.5 rounded-xl bg-[rgba(15,23,42,0.80)] border border-[rgba(59,130,246,0.15)] text-xs text-slate-200 focus:outline-none focus:border-blue-500/50 font-semibold transition-all"
           >
             <option value="ALL">All Clinical Wards</option>
             <option value="ICU">ICU Unit</option>
@@ -109,81 +92,56 @@ export const PatientRosterPage: React.FC = () => {
           </select>
         </div>
 
-        {/* Min Risk Score Threshold Slider */}
         <div className="flex items-center space-x-3 w-full lg:w-auto text-xs">
-          <SlidersHorizontal className="w-4 h-4 text-clinical-teal" />
+          <SlidersHorizontal className="w-4 h-4 text-blue-400" />
           <span className="text-slate-400 font-semibold">Min Risk Threshold:</span>
           <input
-            type="range"
-            min="0"
-            max="80"
-            step="10"
-            value={minRisk}
+            type="range" min="0" max="80" step="10" value={minRisk}
             onChange={(e) => setMinRisk(Number(e.target.value))}
-            className="w-28 accent-clinical-teal cursor-pointer"
+            className="w-28 accent-blue-500 cursor-pointer"
           />
-          <span className="font-mono font-bold text-clinical-teal px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
+          <span className="font-mono font-bold text-blue-400 px-2 py-0.5 rounded-lg bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.20)]">
             {minRisk}+
           </span>
         </div>
       </div>
 
-      {/* Patient Table */}
       <PatientListTable patients={patients} isLoading={isLoading} />
 
       {/* Add Patient Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-[#0F172A] border border-slate-700 rounded-2xl p-6 shadow-2xl space-y-4">
+          <div className="w-full max-w-lg bg-[#0F172A] border border-[rgba(59,130,246,0.20)] rounded-2xl p-6 shadow-2xl space-y-4">
             <h3 className="text-lg font-bold text-slate-100">Register New Telemetry Patient</h3>
-
             <form onSubmit={handleCreatePatient} className="space-y-3">
               <div>
                 <label className="text-xs font-semibold text-slate-300">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={newPatient.name}
+                <input type="text" required value={newPatient.name}
                   onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
-                  placeholder="e.g. David Ross"
-                  className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-clinical-teal"
-                />
+                  placeholder="e.g. David Ross" className={inputCls} />
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-slate-300">Age</label>
-                  <input
-                    type="number"
-                    required
-                    value={newPatient.age}
+                  <input type="number" required value={newPatient.age}
                     onChange={(e) => setNewPatient({ ...newPatient, age: e.target.value })}
-                    placeholder="58"
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-clinical-teal"
-                  />
+                    placeholder="58" className={inputCls} />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-300">Gender</label>
-                  <select
-                    value={newPatient.gender}
+                  <select value={newPatient.gender}
                     onChange={(e) => setNewPatient({ ...newPatient, gender: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-clinical-teal"
-                  >
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Other">Other</option>
+                    className={inputCls}>
+                    <option>Female</option><option>Male</option><option>Other</option>
                   </select>
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-slate-300">Ward Unit</label>
-                  <select
-                    value={newPatient.ward}
+                  <select value={newPatient.ward}
                     onChange={(e) => setNewPatient({ ...newPatient, ward: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-clinical-teal"
-                  >
+                    className={inputCls}>
                     <option value="ICU">ICU</option>
                     <option value="CARDIOLOGY">CARDIOLOGY</option>
                     <option value="PULMONOLOGY">PULMONOLOGY</option>
@@ -193,28 +151,18 @@ export const PatientRosterPage: React.FC = () => {
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-300">Room Number</label>
-                  <input
-                    type="text"
-                    value={newPatient.roomNumber}
+                  <input type="text" value={newPatient.roomNumber}
                     onChange={(e) => setNewPatient({ ...newPatient, roomNumber: e.target.value })}
-                    placeholder="ICU-108"
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-clinical-teal"
-                  />
+                    placeholder="ICU-108" className={inputCls} />
                 </div>
               </div>
-
               <div className="flex items-center justify-end space-x-3 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
-                >
+                <button type="button" onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 rounded-xl bg-[rgba(30,41,59,0.80)] text-slate-300 text-xs font-semibold hover:bg-slate-700 border border-slate-700 transition-colors">
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-clinical-teal hover:bg-teal-600 text-slate-950 text-xs font-bold"
-                >
+                <button type="submit"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold shadow-glow-blue hover:from-blue-500 hover:to-indigo-500 transition-all">
                   Confirm Registration
                 </button>
               </div>

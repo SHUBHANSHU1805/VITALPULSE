@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,59 +7,114 @@
 @layer base {
   body {
     @apply bg-[#0B1120] text-slate-100 antialiased;
+    font-family: 'Inter', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* Subtle ambient blue radial glow in top-left corner */
+    background-image:
+      radial-gradient(ellipse 80% 50% at -10% -20%, rgba(59,130,246,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 110% 110%, rgba(99,102,241,0.05) 0%, transparent 50%);
   }
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0B1120;
-}
-::-webkit-scrollbar-thumb {
-  background: #212E48;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #14B8A6;
-}
+/* ─── Custom Scrollbars ──────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: #0B1120; }
+::-webkit-scrollbar-thumb  { background: #1E2D4A; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #3B82F6; }
 
-/* Glassmorphism Card Styling */
+/* ─── Glass Panels ───────────────────────────────────────────────── */
+/* Base glass card: dark navy with blue-tinted border */
 .glass-panel {
-  background: rgba(21, 31, 50, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(59, 130, 246, 0.10);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* Hover lift — blue glow on hover */
 .glass-panel-hover {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel-hover:hover {
-  border-color: rgba(20, 184, 166, 0.4);
+  border-color: rgba(59, 130, 246, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px -3px rgba(20, 184, 166, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(59, 130, 246, 0.18), 0 0 0 1px rgba(59,130,246,0.08);
 }
 
-/* Pulse animation for active ECG / vital ping */
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
-  }
-  70% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(244, 63, 94, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
-  }
+/* Slightly brighter inner card (nested cards inside panels) */
+.glass-inner {
+  background: rgba(30, 41, 59, 0.55);
+  border: 1px solid rgba(59, 130, 246, 0.08);
+  border-radius: 0.75rem;
 }
 
-.pulse-critical {
+/* ─── Status Badge Pills (Veridia style) ─────────────────────────── */
+.badge-low {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.10);
+  color: #34d399;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-moderate {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.10);
+  color: #fbbf24;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-high {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  background: rgba(249, 115, 22, 0.10);
+  color: #fb923c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-critical {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 63, 94, 0.40);
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   animation: pulse-ring 2s infinite;
+}
+
+/* ─── Pulse / Alert Animations ───────────────────────────────────── */
+@keyframes pulse-ring {
+  0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+  70%  { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+}
+.pulse-critical { animation: pulse-ring 2s infinite; }
+
+/* Blue live-dot glow pulse */
+@keyframes blue-ping {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.15); }
+}
+.ping-blue { animation: blue-ping 1.8s ease-in-out infinite; }
+
+/* ─── Gradient text utility ──────────────────────────────────────── */
+.text-gradient-blue {
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

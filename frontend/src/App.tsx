@@ -16,7 +16,7 @@ const ProtectedLayout: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0B1120] flex items-center justify-center text-slate-400">
-        <Activity className="w-8 h-8 animate-spin text-clinical-teal mb-2" />
+        <Activity className="w-8 h-8 animate-spin text-blue-400 mb-2" />
       </div>
     );
   }

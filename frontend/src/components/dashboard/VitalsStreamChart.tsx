@@ -11,17 +11,17 @@ export const VitalsStreamChart: React.FC<VitalsStreamChartProps> = ({ vitals }) 
   const [selectedMetric, setSelectedMetric] = useState<'heartRate' | 'spo2' | 'bpSystolic' | 'temperature'>('heartRate');
 
   const metricConfig = {
-    heartRate: { label: 'Heart Rate (bpm)', color: '#F43F5E', threshold: 100, thresholdLabel: 'Tachycardia > 100', icon: Heart },
-    spo2: { label: 'SpO2 Oxygen Saturation (%)', color: '#14B8A6', threshold: 90, thresholdLabel: 'Hypoxia < 90%', icon: Activity },
-    bpSystolic: { label: 'Systolic Blood Pressure (mmHg)', color: '#F59E0B', threshold: 140, thresholdLabel: 'Hypertension > 140', icon: Gauge },
-    temperature: { label: 'Body Temperature (°C)', color: '#06B6D4', threshold: 38.0, thresholdLabel: 'Fever > 38°C', icon: Thermometer },
+    heartRate:  { label: 'Heart Rate (bpm)',              color: '#F43F5E', threshold: 100,  thresholdLabel: 'Tachycardia > 100', icon: Heart },
+    spo2:       { label: 'SpO2 Oxygen Saturation (%)',    color: '#3B82F6', threshold: 90,   thresholdLabel: 'Hypoxia < 90%',     icon: Activity },
+    bpSystolic: { label: 'Systolic Blood Pressure (mmHg)', color: '#F59E0B', threshold: 140,  thresholdLabel: 'Hypertension > 140', icon: Gauge },
+    temperature:{ label: 'Body Temperature (°C)',         color: '#6366F1', threshold: 38.0, thresholdLabel: 'Fever > 38°C',      icon: Thermometer },
   };
 
   const chartData = vitals.slice(-25).map((v) => ({
     time: new Date(v.recordedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-    heartRate: v.heartRate,
-    spo2: v.spo2,
-    bpSystolic: v.bpSystolic,
+    heartRate:   v.heartRate,
+    spo2:        v.spo2,
+    bpSystolic:  v.bpSystolic,
     bpDiastolic: v.bpDiastolic,
     temperature: v.temperature,
   }));
@@ -29,21 +29,23 @@ export const VitalsStreamChart: React.FC<VitalsStreamChartProps> = ({ vitals }) 
   const currentConfig = metricConfig[selectedMetric];
 
   return (
-    <div className="p-6 rounded-2xl glass-panel border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl glass-panel border border-[rgba(59,130,246,0.12)] space-y-4 h-full">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="text-base font-bold text-slate-100 flex items-center space-x-2">
             <span>Live Telemetry Stream</span>
+            {/* Blue live dot */}
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-clinical-teal opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-clinical-teal"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
           </h3>
           <p className="text-xs text-slate-400">Real-time WebSocket physiological monitoring</p>
         </div>
 
-        {/* Metric Selector Buttons */}
-        <div className="flex flex-wrap gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+        {/* Metric selector — reference style pill tabs */}
+        <div className="flex flex-wrap gap-1.5 p-1 bg-[rgba(15,23,42,0.80)] rounded-xl border border-[rgba(59,130,246,0.10)]">
           {(Object.keys(metricConfig) as Array<keyof typeof metricConfig>).map((key) => {
             const cfg = metricConfig[key];
             const Icon = cfg.icon;
@@ -54,35 +56,35 @@ export const VitalsStreamChart: React.FC<VitalsStreamChartProps> = ({ vitals }) 
                 onClick={() => setSelectedMetric(key)}
                 className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   active
-                    ? 'bg-slate-800 text-white shadow border border-slate-700'
+                    ? 'bg-[rgba(59,130,246,0.15)] text-white border border-[rgba(59,130,246,0.30)] shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" style={{ color: cfg.color }} />
-                <span className="capitalize">{key.replace('bpSystolic', 'BP').replace('heartRate', 'HR')}</span>
+                <span>{key.replace('bpSystolic', 'BP').replace('heartRate', 'HR')}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Chart Canvas */}
+      {/* Chart */}
       <div className="h-64 w-full pt-2">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id={`gradient-${selectedMetric}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={currentConfig.color} stopOpacity={0.4} />
+                <stop offset="5%"  stopColor={currentConfig.color} stopOpacity={0.35} />
                 <stop offset="95%" stopColor={currentConfig.color} stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
-            <XAxis dataKey="time" stroke="#64748B" fontSize={10} tickLine={false} />
-            <YAxis stroke="#64748B" fontSize={10} domain={['auto', 'auto']} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.07)" />
+            <XAxis dataKey="time" stroke="#475569" fontSize={10} tickLine={false} />
+            <YAxis stroke="#475569" fontSize={10} domain={['auto', 'auto']} tickLine={false} />
             <Tooltip
               contentStyle={{
                 backgroundColor: '#0F172A',
-                borderColor: '#334155',
+                borderColor: 'rgba(59,130,246,0.25)',
                 borderRadius: '0.75rem',
                 color: '#F8FAFC',
                 fontSize: '12px',
